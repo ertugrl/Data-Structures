@@ -1,0 +1,34 @@
+- init:
+        run: rm -f main
+        visible: true
+
+
+- build:
+    run: g++ -Wall -Werror main.cpp -o main  # timeout: 5
+    exit: 0
+    points: 1
+    blocker: true
+
+- case_1:
+        run: ./main employee_salaries.csv operations1.txt #timeout: 30
+        exit: 0
+        blocker: true
+- test_1:
+        run: diff --strip-trailing-cr ./output1.csv ./array_solution.csv
+        exit: 0
+        points: 10
+
+- case_2:
+        run: ./main ./employee_salaries.csv ./operations2.txt #timeout: 30
+        script:
+          - expect: 'ERROR: An invalid ID to delete(\r\n)*ERROR: An invalid ID to update(\r\n)*ERROR: An invalid ID to update' #timeout: 5
+        blocker: true
+- test_2:
+        run: diff --strip-trailing-cr ./output2.csv ./array_solution.csv
+        
+        points: 10
+
+
+- out:
+        run: rm -f main.o main
+        visible: false

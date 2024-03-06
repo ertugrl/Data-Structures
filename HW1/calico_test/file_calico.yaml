@@ -1,0 +1,36 @@
+- init:
+          run: rm -f main.o main
+          visible: false
+
+- build:
+    run: g++ -Wall -Werror main.cpp -o main  # timeout: 5
+    exit: 0
+    points: 1
+    blocker: true
+
+- move_file_1:
+          run: cp -f ./data/employee_salaries.csv case_1.csv
+          blocker: true
+- case_1:
+          run: ./main case_1.csv operations1.txt #timeout: 30
+          exit: 0
+          blocker: true
+- test_1:
+          run: diff --strip-trailing-cr ./case_1.csv ./output1.csv
+          exit: 1
+          points: 10
+
+- move_file_2:
+          run: cp -f ./data/employee_salaries.csv case_2.csv
+          blocker: true
+- case_2:
+          run: ./main case_2.csv operations2.txt #timeout: 30
+          exit: 0
+          blocker: true
+- test_2:
+          run: diff --strip-trailing-cr ./case_2.csv ./output2.csv
+          exit: 1
+          points: 10
+- out:
+          run: rm -f main.o main
+          visible: false

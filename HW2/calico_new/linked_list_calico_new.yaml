@@ -1,0 +1,34 @@
+- init:
+        run: rm -f main
+        visible: true
+
+
+- build:
+    run: g++ -Wall -Werror main.cpp -o main  # timeout: 30
+    exit: 0
+    points: 1
+    blocker: true
+
+- case_1:
+        run: ./main hw2.csv calico500.txt # timeout: 30
+        exit: 0
+        blocker: true
+- test_1:
+        run: diff --strip-trailing-cr ./calico500_solution.csv ./linked_list_solution.csv
+        exit: 0
+        points: 10
+
+- case_2:
+        run: ./main ./hw2.csv ./calico1000.txt # timeout: 50
+        script:
+          - expect: 'ERROR: An invalid ID to delete' #timeout: 50
+        blocker: true
+- test_2:
+        run: diff --strip-trailing-cr ./calico1000_solution.csv ./linked_list_solution.csv
+        
+        points: 10
+
+
+- out:
+        run: rm -f main.o main
+        visible: false
